@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Skeleton, SVGSkeleton } from "@/components/ui/skeleton";
-import { getUserData } from "@/app/(app)/_actions/userActions";
+import { fetchAllOrganizations, getUserData } from "@/app/(app)/_actions/userActions";
 import Image from "next/image";
 import JoinOrganizationForm from "./JoinOrganizationForm";
 import { ExtendedOrganization, ExtendedUserData } from "@/lib/ExtendedTypes";
@@ -20,11 +20,12 @@ const UserData = () => {
     const loadUserData = async () => {
       setIsUserLoading(true);
       try {
-        const data = await fetchUserData();
-        setUserData(data);
-        setOrganizations(data?.organizations || []);
+        const userDataFromAction = await fetchUserData();
+        setUserData(userDataFromAction);
+        const organizationsFromAction = await fetchAllOrganizations();
+        setOrganizations(organizationsFromAction);
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error('Error fetching user userDataFromAction:', error);
       } finally {
         setIsUserLoading(false);
       }
@@ -32,6 +33,8 @@ const UserData = () => {
 
     loadUserData();
   }, []);
+
+  console.log(userData);
 
   if (isUserLoading) return <LoadingState />;
   if (!userData) return <LoadingState />;
@@ -51,25 +54,8 @@ const UserData = () => {
   }
 
   if (!userData?.organizations || userData.organizations.length === 0) {
-    // Render JoinClassRoomForm when userData.classrooms is empty
     return <JoinOrganizationForm organizations={organizations} userData={userData!} />;
   }
-
-  // // Render MyClassroom or StudentClassroom based on user's access
-  //  return (
-  //    <div>
-  //      {userData.access === "STUDENT" ? (
-  //        <StudentClassroom userData={userData} />
-  //      ) : (
-  //        <MyClassroom
-  //          classrooms={userData.classrooms}
-  //          userData={userData}
-  //          allClassrooms={classrooms}
-  //        />
-  //      )}
-  //    </div>
-  //  );
-  //};
 
   return <pre>{JSON.stringify(userData, null, 2)}</pre>;
 }
@@ -77,7 +63,6 @@ const UserData = () => {
 export default UserData;
 
 const LoadingSkeleton = () => {
-  // Create an array with a length of 5 for five rows
   const rows = Array.from({ length: 3 });
 
   return (

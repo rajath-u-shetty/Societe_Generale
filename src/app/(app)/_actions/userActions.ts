@@ -31,3 +31,14 @@ export const getUserData = async () => {
   });
   return data;
 };
+
+export const fetchAllOrganizations = async () => {
+  const data = await db!.organization.findMany({
+    include: {
+      projects: true,
+      users: true,
+      admin: true,
+    },
+  });
+  return data;
+};

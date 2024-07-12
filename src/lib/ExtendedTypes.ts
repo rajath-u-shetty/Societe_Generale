@@ -1,8 +1,9 @@
-import { Organization, Role, User, UserProject } from "@prisma/client";
+import { Organization, Project, Role, User, UserProject } from "@prisma/client";
 
 export type ExtendedOrganization = Organization & {
   users: User[];
-  projects: UserProject[];
+  projects: Project[];
+  admin : User;
 };
 
 export type ExtendedUser = User & {

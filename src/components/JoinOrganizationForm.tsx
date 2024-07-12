@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/table";
 import { Input } from "./ui/input"; // Ensure you have an Input component
 import Image from "next/image";
-import { Organization } from "@prisma/client";
 import { ExtendedOrganization, ExtendedUserData } from "@/lib/ExtendedTypes";
 import JoinOrganizationDialog from "./JoinOrganizationDialog";
 
@@ -27,6 +26,8 @@ const JoinOrganizationForm = ({ organizations, userData }: Props) => {
   const filteredClassrooms = organizations.filter((organization) =>
     organization.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  if(!userData) return <div>Loading...</div>;
 
   return (
     <div className="pt-10 pb-14">
@@ -53,7 +54,7 @@ const JoinOrganizationForm = ({ organizations, userData }: Props) => {
               <TableHead className="text-left w-1/3">Classroom Name</TableHead>
               <TableHead className="text-center">Created By</TableHead>
               <TableHead className="text-center">Members</TableHead>
-              <TableHead className="text-center">Subjects</TableHead>
+              <TableHead className="text-center">Projects</TableHead>
               <TableHead className="text-center">Join</TableHead>
             </TableRow>
           </TableHeader>
@@ -64,7 +65,7 @@ const JoinOrganizationForm = ({ organizations, userData }: Props) => {
                   {organization.name}
                 </TableCell>
                 <TableCell className="text-center">
-                  {organization.adminId}
+                  {organization.admin.name}
                 </TableCell>
                 <TableCell className="text-center">
                   {organization.users.length}
@@ -74,6 +75,7 @@ const JoinOrganizationForm = ({ organizations, userData }: Props) => {
                 </TableCell>
                 <TableCell className="text-center">
                   <JoinOrganizationDialog
+                    organization={organization}
                     userId={userData!.id}
                     userAccess={userData!.role}
                   />
@@ -91,7 +93,7 @@ const JoinOrganizationForm = ({ organizations, userData }: Props) => {
             src="/empty.svg"
           />
           <div className="text-2xl text-center">
-            There are no classrooms yet. Please come back later.
+            There are no Organizations yet. Please come back later.
           </div>
         </div>
       )}
