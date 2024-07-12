@@ -1,4 +1,4 @@
-//import CreateClassroomDialog from "@/components/CreateClassroomDialog";
+import CreateOrganizationDialog from "@/components/CreateOrganizationDialog";
 import UserData from "@/components/UserData";
 import { Separator } from "@/components/ui/separator";
 import { authOptions } from "@/lib/auth/utils";
@@ -7,7 +7,6 @@ import React from "react";
 
 const StudentDashboard = async () => {
   const session = await getServerSession(authOptions);
-  //{session?.user.access !== "USER" && <CreateClassroomDialog />}
 
   return (
     <div className="min-h-screen h-full dark:bg-[rgb(10,10,10)]">
@@ -15,6 +14,7 @@ const StudentDashboard = async () => {
         <h1 className="md:text-3xl text-xl font-semibold">
           Welcome {session?.user?.name},
         </h1>
+        {session?.user.access !== "ADMIN" && <CreateOrganizationDialog />}
       </div>
       <Separator className="mt-3" />
       <div>

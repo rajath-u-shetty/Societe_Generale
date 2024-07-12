@@ -61,7 +61,7 @@ export default function JoinOrganizationDialog({ organization, userId, userAcces
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const payload = {
-      classroomId: organization.id,
+      organizationId: organization.id,
       userId,
       password: values.password,
     };
@@ -71,10 +71,10 @@ export default function JoinOrganizationDialog({ organization, userId, userAcces
         payload
       );
       if (data) {
-        router.push(`/classrooms/${organization.id}`);
+        router.push(`/organization/${organization.id}`);
         toast({
           title: "Joined",
-          description: "Classroom joined successfully",
+          description: "Organization joined successfully",
         });
       }
     } catch (error: any) {

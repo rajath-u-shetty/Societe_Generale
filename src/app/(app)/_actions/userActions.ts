@@ -24,8 +24,8 @@ export const getUserData = async () => {
       organizations: {
         include: {
           users: true,
-          projects: true
-        },
+          projects: true,
+        }
       },
     }
   });

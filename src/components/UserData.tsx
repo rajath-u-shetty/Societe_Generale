@@ -48,7 +48,7 @@ const UserData = () => {
           height="300"
           src="/empty.svg"
         />
-        <p className="text-2xl text-center">You don&apos;t have any classroom. Please join a classroom</p>
+        <p className="text-2xl text-center">You don&apos;t have any organization. Please join a organization</p>
       </div>
     );
   }

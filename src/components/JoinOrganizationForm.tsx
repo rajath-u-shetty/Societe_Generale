@@ -22,8 +22,8 @@ type Props = {
 const JoinOrganizationForm = ({ organizations, userData }: Props) => {
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Filter classrooms based on search query
-  const filteredClassrooms = organizations.filter((organization) =>
+  // Filter organizations based on search query
+  const filteredOrganizations = organizations.filter((organization) =>
     organization.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -38,7 +38,7 @@ const JoinOrganizationForm = ({ organizations, userData }: Props) => {
         </h1>
       </div>
       <p className="text-muted-foreground md:text-sm text-xs pb-8">
-        Click on the classroom you want to join{" "}
+        Click on the organization you want to join{" "}
         {userData?.role !== "ADMIN" && <span>or create one.</span>}
       </p>
       <Input
@@ -46,12 +46,12 @@ const JoinOrganizationForm = ({ organizations, userData }: Props) => {
         placeholder="Start typing to search..."
         onChange={(e) => setSearchQuery(e.target.value)}
       />
-      {filteredClassrooms.length > 0 ? (
+      {filteredOrganizations.length > 0 ? (
         <Table>
-          <TableCaption>A list of the classrooms you can join</TableCaption>
+          <TableCaption>A list of the organizations you can join</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-left w-1/3">Classroom Name</TableHead>
+              <TableHead className="text-left w-1/3">Organization Name</TableHead>
               <TableHead className="text-center">Created By</TableHead>
               <TableHead className="text-center">Members</TableHead>
               <TableHead className="text-center">Projects</TableHead>
@@ -59,7 +59,7 @@ const JoinOrganizationForm = ({ organizations, userData }: Props) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredClassrooms.map((organization) => (
+            {filteredOrganizations.map((organization) => (
               <TableRow key={organization.id}>
                 <TableCell className="text-left font-medium">
                   {organization.name}
