@@ -1,23 +1,20 @@
-"use client";
+import SignIn from '@/components/SignIn';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { ChevronLeft } from 'lucide-react';
+import Link from 'next/link';
+import { FC } from 'react';
 
-import { signIn } from "next-auth/react";
+const page: FC = () => {
+  return <div className='absolute inset-0'>
+    <div className='h-full max-w-2xl mx-auto flex flex-col items-center justify-center gap-20'>
+      <Link href="/" className={cn(buttonVariants({ variant: 'ghost' }), "self-start -mt-20")}>
+        <ChevronLeft className='mr-2 h-4 w-4' />
+        Home
+      </Link>
+      <SignIn />
+    </div>
+  </div>
+}
 
-const Page = () => {
-  return (
-    <main className="bg-popover max-w-lg mx-auto my-4 rounded-lg p-10">
-      <h1 className="text-2xl font-bold text-center">
-        Sign in to your account
-      </h1>
-      <div className="mt-4">
-        <button
-          onClick={() => signIn(undefined, { callbackUrl: "/dashboard" })}
-          className="w-full bg-primary text-primary-foreground text-center hover:opacity-90 font-medium px-4 py-2 rounded-lg block"
-        >
-          Sign In
-        </button>
-      </div>
-    </main>
-  );
-};
-
-export default Page;
+export default page;
