@@ -29,6 +29,9 @@ model Organization {
   id        String    @id @default(cuid())
   name      String
   projects  Project[]
+  users     User[]    @relation("OrganizationUsers")
+  adminId   String
+  admin     User      @relation("OrganizationAdmin", fields: [adminId], references: [id], onDelete: Cascade)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -53,6 +56,8 @@ model User {
   role          Role      @default(USER)
   accounts      Account[]
   sessions      Session[]
+  organizations Organization[] @relation("OrganizationUsers")
+  adminOrganizations Organization[] @relation("OrganizationAdmin")
   userProjects  UserProject[]
   sops          SOP[]     @relation("CreatedSOPs")
 }
