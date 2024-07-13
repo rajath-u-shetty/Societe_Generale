@@ -3,6 +3,7 @@ import { CompleteProject, relatedProjectSchema, CompleteUser, relatedUserSchema 
 
 export const sOPSchema = z.object({
   id: z.string(),
+  name: z.string(),
   content: z.string(),
   AiScore: z.number().nullish(),
   aiContent: z.string().nullish(),

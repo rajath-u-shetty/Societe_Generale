@@ -76,6 +76,7 @@ model UserProject {
 
 model SOP {
   id           String   @id @default(cuid())
+  name         String
   content      String
   AiScore      Float?
   aiContent    String?

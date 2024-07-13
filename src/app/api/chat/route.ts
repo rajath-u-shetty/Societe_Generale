@@ -6,6 +6,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const regulationsText = body.regulationsText;
   const sopItems = body.sopItems;
+  const name = body.name;
 
   console.log("body", body);
   console.log("regulationsText", regulationsText); 
@@ -53,6 +54,7 @@ Instructions:
 - givenSopItems: Include the original SOP items as provided.
 - enhancedSopItems: Provide improved versions of the SOP items that better align with the regulations. Maintain the original structure but modify the content as needed.
 - scoreOfEnteredSOPItems: Assign a score from 0 to 100 indicating how well the original SOP items comply with the regulations.
+- Return the name as it is.
 
 Ensure your response is a valid JSON object wrapped in a code block.`,
       },

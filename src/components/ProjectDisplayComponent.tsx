@@ -135,7 +135,7 @@ const ProjectDisplayComponent = ({
           </div>
         </div>
       ) : filteredSOPs && filteredSOPs.length > 0 ? (
-        <pre>{JSON.stringify(filteredSOPs, null, 2)}</pre>
+        filteredSOPs.map((sop: any) => (<ContentDisplayCard key={sop.id} data={sop} />))
       ) : searchStarted ? (
         <div className="flex flex-col gap-8 w-full items-center mt-24">
           <Image
@@ -165,6 +165,7 @@ import { Project, Role, User } from "@prisma/client";
 import { Input } from "./ui/input";
 import SOPUploadDialog from "./SOPUploadDialog";
 import ProjectRegulationsTextDialog from "./ProjectRegulationsTextDialog";
+import ContentDisplayCard from "./DisplayCard";
 
 const LoadingSkeleton = () => (
   <>

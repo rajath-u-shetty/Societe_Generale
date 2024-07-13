@@ -2,6 +2,8 @@ import { authOptions } from "@/lib/auth/utils";
 import { AiResponse } from "@/lib/types";
 import { getServerSession } from "next-auth";
 
+type SOPType = AiResponse;
+
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
   if (!session?.user.id) {
@@ -13,7 +15,10 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify({ error: "No SOP Text" }), { status: 400 });
   }
 
-  const { givenSopItems, enhancedSopItems, scoreOfEnteredSOPItems }: AiResponse = body.sopText;
+  const { givenSopItems, enhancedSopItems, scoreOfEnteredSOPItems }: SOPType = body.sopText;
+  const name = body.name;
+
+  console.log(body)
 
   const project = await db!.project.findFirst({ where: { id: body.projectId } });
   if (!project) {
@@ -32,6 +37,7 @@ export async function POST(req: Request) {
           id: session.user.id!,
         },
       },
+      name: name,
       content: JSON.stringify(givenSopItems),
       aiContent: JSON.stringify(enhancedSopItems),
       AiScore: Number(scoreOfEnteredSOPItems),

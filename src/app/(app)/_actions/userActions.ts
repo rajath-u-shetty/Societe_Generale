@@ -124,3 +124,15 @@ export const setProjectRegulationsText = async (projectId: string, regulationsTe
   });
   return { error: null, data };
 }
+
+export const getProjectRegulationsText = async (projectId: string) => {
+  const session = await getServerSession(authOptions);
+  if (!session) return { error: "Unauthorized", data: null };
+  if (!projectId) return { error: "Missing projectId", data: null };
+  const data = await db!.project.findUnique({
+    where: {
+      id: projectId,
+    },
+  });
+  return { error: null, data };
+}

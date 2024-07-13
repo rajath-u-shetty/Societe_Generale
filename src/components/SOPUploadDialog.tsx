@@ -23,17 +23,18 @@ type Props = {
 const SOPUploadDialog = ({ projectId, organizationId }: Props) => {
   const SopItems = useSOPStore((state) => state.SOPItems);
   const regulationsText = useSOPStore((state) => state.regulationsText);
+  const name = useSOPStore((state) => state.SOPName);
   const [isOpen, setIsOpen] = React.useState(false);
 
   const { mutate: mutateSOP, isPending } = useMutation({
     mutationFn: async () => {
-      const payload = { regulationsText, sopItems: SopItems }
+      const payload = { regulationsText, sopItems: SopItems, name }
       const { data } = await axios.post("/api/chat", payload)
       console.log("data", data.text);
       return data.text
     },
     onSuccess: async (data) => {
-      await axios.post("/api/project/sop", { projectId, organizationId, sopText: data })
+      await axios.post("/api/project/sop", { projectId, organizationId, sopText: data, name })
       setIsOpen(false)
     },
   })
@@ -48,7 +49,7 @@ const SOPUploadDialog = ({ projectId, organizationId }: Props) => {
           Upload SOP
         </Button>
       </DialogTrigger>
-      <DialogContent className="md:min-w-[600px]">
+      <DialogContent className="md:min-w-[600px] max-h-[70vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="leading-relaxed">Add Items and arrange them in the order you want to create a SOP</DialogTitle>
         </DialogHeader>

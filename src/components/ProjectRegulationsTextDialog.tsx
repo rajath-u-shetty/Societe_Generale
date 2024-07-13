@@ -1,5 +1,4 @@
-"use client"
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -7,7 +6,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Button } from './ui/button';
+import { Button } from './ui/button'
 import {
   Form,
   FormControl,
@@ -16,17 +15,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Textarea } from './ui/textarea';
+import { Textarea } from './ui/textarea'
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { useSOPStore } from '@/lib/stores/useSOP';
-import { DialogClose } from '@radix-ui/react-dialog';
-import { setProjectRegulationsText } from '@/app/(app)/_actions/userActions';
+import { useSOPStore } from '@/lib/stores/useSOP'
+import { getProjectRegulationsText, setProjectRegulationsText } from '@/app/(app)/_actions/userActions'
 
 type Props = {
-  organizationId: string;
-  projectId: string;
+  organizationId: string
+  projectId: string
 }
 
 const formSchema = z.object({
@@ -36,18 +34,27 @@ const formSchema = z.object({
 })
 
 const ProjectRegulationsTextDialog = ({ projectId, organizationId }: Props) => {
-  const [isLoading, setIsLoading] = React.useState(false)
-  const [isOpen, setIsOpen] = React.useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const regulationsText = useSOPStore((state) => state.regulationsText)
   const setRegulationsText = useSOPStore((state) => state.setRegulationsText)
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      regulationsText: regulationsText,
+      regulationsText: '',
     },
   })
 
-  // 2. Define a submit handler.
+  useEffect(() => {
+    const getDbRegulationsText = async () => {
+      const dbRegulationsText = await getProjectRegulationsText(projectId)
+      const textToUse = regulationsText || dbRegulationsText.data?.regulation || ''
+      form.setValue('regulationsText', textToUse)
+    }
+    getDbRegulationsText()
+  }, [projectId, regulationsText, form])
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
     setRegulationsText(values.regulationsText)
@@ -55,6 +62,7 @@ const ProjectRegulationsTextDialog = ({ projectId, organizationId }: Props) => {
     setIsLoading(false)
     setIsOpen(false)
   }
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -81,8 +89,6 @@ const ProjectRegulationsTextDialog = ({ projectId, organizationId }: Props) => {
                   <FormControl>
                     <Textarea
                       {...field}
-                      defaultValue={regulationsText}
-                      value={field.value} // use value instead of defaultValue
                       rows={7}
                       className="w-full h-full"
                       placeholder="Enter regulations text here"
@@ -92,7 +98,9 @@ const ProjectRegulationsTextDialog = ({ projectId, organizationId }: Props) => {
                 </FormItem>
               )}
             />
-            <Button type="submit" isLoading={isLoading} className="w-full"> Save </Button>
+            <Button type="submit" disabled={isLoading} className="w-full">
+              {isLoading ? 'Saving...' : 'Save'}
+            </Button>
           </form>
         </Form>
       </DialogContent>

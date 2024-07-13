@@ -39,6 +39,8 @@ const SortableDemo: React.FC = () => {
 
   const items = useSOPStore((state) => state.SOPItems);
   const setItems = useSOPStore((state) => state.setSOPItems);
+  const name = useSOPStore((state) => state.SOPName); 
+  const setName = useSOPStore((state) => state.setSOPName);                                                       
   const [newItemName, setNewItemName] = useState('');
 
   console.log("items", items);
@@ -68,6 +70,13 @@ const SortableDemo: React.FC = () => {
 
   return (
     <main className='max-w-2xl'>
+      <Input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder='Enter SOP name'
+        className="w-[100%]" 
+      />
       <div className='max-w-2xl flex justify-between items-center my-4'>
         <Input
           type="text"
