@@ -3,10 +3,9 @@ import { CompleteProject, relatedProjectSchema, CompleteUser, relatedUserSchema 
 
 export const sOPSchema = z.object({
   id: z.string(),
-  title: z.string(),
   content: z.string(),
+  AiScore: z.number().nullish(),
   aiContent: z.string().nullish(),
-  description: z.string(),
   projectId: z.string(),
   createdById: z.string(),
   createdAt: z.date(),

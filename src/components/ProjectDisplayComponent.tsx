@@ -25,16 +25,11 @@ type Props = {
   projectName: string;
 }
 type ExtendedSOP = {
-  id: string;
-  title: string;
+  id: number;
+  aiScore: number;
   content: string;
-  aiContent: string;
-  projectId: string;
-  project: Project;
-  createdById: string;
-  createdBy: User;
-  createdAt: Date;
-  updatedAt: Date;
+  AiContent: string;
+  createdById: number;
 }
 
 const ProjectDisplayComponent = ({
@@ -60,7 +55,8 @@ const ProjectDisplayComponent = ({
           router.push("/dashboard");
           toast({ title: "Error", description: data?.error, variant: "destructive" });
         }
-        return data.data!.sops as ExtendedSOP[];
+        console.log("data from /id/projectId", data);
+        return data.data!.sops;
       } catch (error: any) {
         if (
           error.response.status === 401 ||
@@ -79,9 +75,7 @@ const ProjectDisplayComponent = ({
     refetchInterval: 1000,
   });
 
-  const [filteredSOPs, setFilteredSOPs] = React.useState<ExtendedSOP[] | null>(
-    null
-  );
+  const [filteredSOPs, setFilteredSOPs] = React.useState<any>();
   const [searchStarted, setSearchStarted] = React.useState(false);
 
   useEffect(() => {
@@ -114,20 +108,6 @@ const ProjectDisplayComponent = ({
         <Input
           className="flex-1 dark:bg-[rgb(23,23,23)] bg-neutral-200"
           placeholder="Start typing to search..."
-          onChange={(e) => {
-            setSearchStarted(true);
-            setFilteredSOPs(
-              sops?.filter(
-                (sop) =>
-                  sop.title
-                    .toLowerCase()
-                    .includes(e.target.value.toLowerCase()) ||
-                  sop.content
-                    .toLowerCase()
-                    .includes(e.target.value.toLowerCase())
-              ) || null
-            );
-          }}
         />
         <ProjectRegulationsTextDialog projectId={projectId} organizationId={organizationId} />
         {userAccess !== "USER" && (
@@ -155,7 +135,7 @@ const ProjectDisplayComponent = ({
           </div>
         </div>
       ) : filteredSOPs && filteredSOPs.length > 0 ? (
-        <div></div>
+        <pre>{JSON.stringify(filteredSOPs, null, 2)}</pre>
       ) : searchStarted ? (
         <div className="flex flex-col gap-8 w-full items-center mt-24">
           <Image
