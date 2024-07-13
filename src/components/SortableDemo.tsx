@@ -74,32 +74,44 @@ const SortableDemo: React.FC<HomeProps> = () => {
   }
 
   return (
-    <main className='flex justify-center items-center h-screen px-2 mx-auto select-none'>
-      <Card className='w-full md:max-w-lg'>
-        <CardHeader className='space-y-1 '>
-          <CardTitle className='text-2xl flex justify-between'>
-            Frameworks
-            <AddNewItem addNewItem={addNewItem} />
-          </CardTitle>
-          <CardDescription>List Popular web development frameworks</CardDescription>
-        </CardHeader>
-        <CardContent className='grid gap-4'>
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-            modifiers={[restrictToVerticalAxis, restrictToParentElement]}
-          >
-            <SortableContext items={items} strategy={verticalListSortingStrategy}>
-              {items.map((item) => (
-                <SortableLinks key={item.id} id={item} onDelete={handleDelete} />
-              ))}
-            </SortableContext>
-          </DndContext>
-        </CardContent>
-      </Card>
+    <main className='max-w-2xl'>
+      <div className='max-w-2xl flex justify-between items-center my-4'>
+        <p>Add New Item</p>
+        <AddNewItem addNewItem={addNewItem} />
+      </div>
+      <div className='max-w-2xl space-y-4'>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+          modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+        >
+          <SortableContext items={items} strategy={verticalListSortingStrategy}>
+            {items.map((item) => (
+              <SortableLinks key={item.id} id={item} onDelete={handleDelete} />
+            ))}
+          </SortableContext>
+        </DndContext>
+
+      </div>
     </main>
   );
 };
 
 export default SortableDemo;
+
+
+//<AddNewItem addNewItem={addNewItem} />
+//<DndContext
+//  sensors={sensors}
+//  collisionDetection={closestCenter}
+//  onDragEnd={handleDragEnd}
+//  modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+//>
+//  <SortableContext items={items} strategy={verticalListSortingStrategy}>
+//    {items.map((item) => (
+//      <SortableLinks key={item.id} id={item} onDelete={handleDelete} />
+//    ))}
+//  </SortableContext>
+//</DndContext>
+
