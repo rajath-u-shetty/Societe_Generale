@@ -1,35 +1,35 @@
-"use client"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { DragHandleDots2Icon, TrashIcon } from "@radix-ui/react-icons"
-import { useFieldArray, useForm } from "react-hook-form"
-import { z } from "zod"
+"use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { DragHandleDots2Icon, TrashIcon } from "@radix-ui/react-icons";
+import { useFieldArray, useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Sortable,
   SortableDragHandle,
   SortableItem,
-} from "@/components/ui/sortable"
+} from "@/components/ui/sortable";
 
 const schema = z.object({
   flipTricks: z.array(
     z.object({
       name: z.string(),
-      spin: z.string(),
     })
   ),
-})
+  description: z.string().optional(),
+});
 
-type Schema = z.infer<typeof schema>
+type Schema = z.infer<typeof schema>;
 
 function SortableDemo() {
   const form = useForm<Schema>({
@@ -37,25 +37,28 @@ function SortableDemo() {
     defaultValues: {
       flipTricks: [
         {
-          spin: "360",
           name: "Kickflip",
         },
         {
-          spin: "180",
           name: "Heelflip",
         },
       ],
+      description: "",
     },
-  })
+  });
 
   function onSubmit(input: Schema) {
-    console.log({ input })
+    console.log({ input });
+    console.log(input.description);
+    console.log(input.flipTricks[0].name);
+
+
   }
 
   const { fields, append, move, remove } = useFieldArray({
     control: form.control,
     name: "flipTricks",
-  })
+  });
 
   return (
     <Card>
@@ -72,7 +75,7 @@ function SortableDemo() {
             variant="outline"
             size="sm"
             className="w-fit"
-            onClick={() => append({ name: "", spin: "" })}
+            onClick={() => append({ name: "", })}
           >
             Add trick
           </Button>
@@ -84,13 +87,29 @@ function SortableDemo() {
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex w-full flex-col gap-4"
           >
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      className="h-8"
+                      {...field}
+                      placeholder="Description"
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
             <Sortable
               value={fields}
               onMove={({ activeIndex, overIndex }) =>
                 move(activeIndex, overIndex)
               }
               overlay={
-                <div className="grid grid-cols-[0.5fr,1fr,auto,auto] items-center gap-2">
+                <div className="grid grid-cols-[1fr,auto,auto] items-center gap-2">
                   <div className="h-8 w-full rounded-sm bg-primary/10" />
                   <div className="h-8 w-full rounded-sm bg-primary/10" />
                   <div className="size-8 shrink-0 rounded-sm bg-primary/10" />
@@ -101,18 +120,7 @@ function SortableDemo() {
               <div className="flex w-full flex-col gap-2">
                 {fields.map((field, index) => (
                   <SortableItem key={field.id} value={field.id} asChild>
-                    <div className="grid grid-cols-[0.5fr,1fr,auto,auto] items-center gap-2">
-                      <FormField
-                        control={form.control}
-                        name={`flipTricks.${index}.spin`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <Input className="h-8" {...field} />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
+                    <div className="grid grid-cols-[1fr,auto,auto] items-center gap-2">
                       <FormField
                         control={form.control}
                         name={`flipTricks.${index}.name`}
@@ -159,7 +167,8 @@ function SortableDemo() {
         </Form>
       </CardContent>
     </Card>
-  )
+  );
 }
 
-export default SortableDemo
+export default SortableDemo;
+

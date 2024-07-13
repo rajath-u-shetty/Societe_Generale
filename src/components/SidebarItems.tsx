@@ -2,11 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogOut, LucideIcon } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import { defaultLinks, additionalLinks } from "@/config/nav";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
-import { signOut } from "next-auth/react";
-import { Button } from "./ui/button";
 
 export interface SidebarLink {
   title: string;
@@ -57,20 +55,6 @@ const SidebarLinkGroup = ({
           </li>
         ))}
       </ul>
-      <Tooltip delayDuration={100}> 
-        <TooltipTrigger asChild>
-          <Button
-            variant="destructive"
-            className="w-full h-10 flex items-center justify-center mt-3"
-            onClick={() => signOut({ callbackUrl: "/" })}
-          >
-            <LogOut className="w-6 h-6 text-white" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent side="right">
-          <p>Sign out</p>
-        </TooltipContent>
-      </Tooltip>
     </div>
   );
 };
