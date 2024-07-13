@@ -1,6 +1,7 @@
 "use server";
 
 import { authOptions } from "@/lib/auth/utils";
+import { ExtendedOrganization } from "@/lib/ExtendedTypes";
 import { getServerSession } from "next-auth";
 
 export const getUserData = async () => {
@@ -44,7 +45,22 @@ export const fetchAllOrganizations = async () => {
 };
 
 export const actionFetchOrganizationData = async (organizationId: string) => {
-  const data = await db!.organization.findUnique({
+  const session = await getServerSession(authOptions);
+  if (!session) return { error: "Unauthorized", data: null };
+  if (!organizationId) return { error: "Missing organizationId", data: null };
+  const isUserPartOfOrganization = await db!.organization.findUnique({
+    where: {
+      id: organizationId,
+      users: {
+        some: {
+          id: session.user.id,
+        },
+      },
+    },
+  });
+
+  if (!isUserPartOfOrganization) return { error: "User is not part of this organization" };
+  const data : ExtendedOrganization | null = await db!.organization.findUnique({
     where: {
       id: organizationId,
     },
@@ -54,5 +70,5 @@ export const actionFetchOrganizationData = async (organizationId: string) => {
       admin: true,
     },
   });
-  return data;
+  return { error: null, data };
 };

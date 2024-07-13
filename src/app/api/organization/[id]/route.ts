@@ -69,15 +69,15 @@ export async function PUT(req: Request) {
   }
 }
 
-export async function DELETE(req: Request, { params: { organizationId } }: { params: { organizationId: string } }) {
+export async function DELETE(req: Request, { params: { id } }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
   if (!session) return new Response("Unauthorized", { status: 401 });
-  if (!organizationId) return new Response("Missing organizationId", { status: 400 });
+  if (!id) return new Response("Missing organizationId", { status: 400 });
   try {
     // Delete the organizationMember entry to remove the user from the organization
     const deleteOrganizationMemberResult = await db.organization.update({
       where: {
-        id: organizationId,
+        id: id,
       },
       data: {
         users: {
@@ -94,7 +94,7 @@ export async function DELETE(req: Request, { params: { organizationId } }: { par
     if (deleteOrganizationMemberResult) {
       const deleteResult = await db.organization.delete({
         where: {
-          id: organizationId,
+          id: id,
           adminId: session.user.id,
         },
       });

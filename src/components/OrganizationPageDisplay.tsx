@@ -1,9 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
 import { Separator } from "./ui/separator";
-import CreateProjectDialog from "./CreateProjectDialog";
 import Link from "next/link";
 import { Card } from "./ui/card";
 import { Input } from "./ui/input";
@@ -39,17 +36,25 @@ type ExtendedProject = {
 
 const OrganizationPageDisplay = ({ organizationId, user }: Props) => {
   const router = useRouter();
-  const [organizationData, setOrganizationData] = useState<ExtendedOrganization>();
+  const [organizationData, setOrganizationData] = useState<ExtendedOrganization | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [filteredSubjects, setFilteredSubjects] = useState<ExtendedProject[] | []>([]);
+  const [filteredOrganizations, setFilteredOrganizations] = useState<ExtendedProject[] | []>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchOrganizationData = async () => {
       setIsLoading(true);
       try {
-        const data = await actionFetchOrganizationData(organizationId);
-        setOrganizationData(data!);
+        const data = await actionFetchOrganizationData(organizationId).catch(error => {
+          console.log("error", error);
+          router.push("/dashboard");
+          return { error: "Failed to fetch organization data", data: null };
+        });
+        if (data.error) {
+          router.push("/dashboard");
+          toast({ title: "Error", description: data?.error, variant: "destructive" });
+        }
+        setOrganizationData(data.data!);
       } catch (error) {
         toast({
           title: "Error",
@@ -62,24 +67,14 @@ const OrganizationPageDisplay = ({ organizationId, user }: Props) => {
     };
 
     fetchOrganizationData();
-  }, [organizationId]);
+  }, [organizationId, router]);
 
   useEffect(() => {
     if (organizationData?.projects) {
       const filtered = organizationData.projects.filter((project) =>
         project.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      setFilteredSubjects(filtered);
-    }
-  }, [organizationData, searchQuery]);
-
-
-  useEffect(() => {
-    if (organizationData?.projects) {
-      const filtered = organizationData.projects.filter((project) =>
-        project.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setFilteredSubjects(filtered);
+      setFilteredOrganizations(filtered);
     }
   }, [organizationData, searchQuery]);
 
@@ -127,7 +122,7 @@ const OrganizationPageDisplay = ({ organizationId, user }: Props) => {
               src="/empty.svg"
             />
             <div className="text-2xl text-center">
-              No subjects found. Come back later or create a new subject.
+              No projects found. Come back later or create a new project.
             </div>
           </div>
         </div>
@@ -135,7 +130,7 @@ const OrganizationPageDisplay = ({ organizationId, user }: Props) => {
 
       <div className="grid md:grid-cols-3 grid-cols-1 gap-6 mt-6 pb-14">
         {organizationData.projects.length > 0 &&
-          filteredSubjects.map((project) => (
+          filteredOrganizations.map((project) => (
             <Link
               href={`/organization/${organizationId}/${project.id}`}
               className="cursor-pointer border-white border rounded-xl"
@@ -159,6 +154,7 @@ import { Skeleton, SVGSkeleton } from "@/components/ui/skeleton";
 import { ExtendedOrganization } from "@/lib/ExtendedTypes";
 import { Role, User, UserProject } from "@prisma/client";
 import { actionFetchOrganizationData } from "@/app/(app)/_actions/userActions";
+import CreateProjectDialog from "./CreateProjectDialog";
 
 const LoadingSkeleton = () => (
   <>

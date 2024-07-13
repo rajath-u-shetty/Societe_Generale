@@ -18,6 +18,7 @@ import { ExtendedOrganization, ExtendedUserData } from "@/lib/ExtendedTypes";
 import { LoadingState } from "./UserData";
 import JoinOrganizationDialog from "./JoinOrganizationDialog";
 import LeaveOrganizationDialog from "./LeaveOrganizationDialog";
+import DeleteOrganizationDialog from "./DeleteOrganizationDialog";
 
 type Props = {
   organizations: ExtendedOrganization[]
@@ -111,7 +112,9 @@ function MyClassroom({ organizations, userData, allOrganizations }: Props) {
                       //    classroomId={organization.id}
                       //  />
                       userData.role !== "USER" ? (
-                        <p>Delete organization</p>
+                        <DeleteOrganizationDialog
+                          organizationId={organization.id}
+                        />
                       ) : (
                         <LeaveOrganizationDialog
                           organizationId={organization.id}
