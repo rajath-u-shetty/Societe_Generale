@@ -7,12 +7,12 @@ generator client {
 
 generator zod {
   provider              = "zod-prisma"
-  output                = "./zod" 
-  relationModel         = true 
-  modelCase             = "camelCase" 
-  modelSuffix           = "Schema" 
-  useDecimalJs          = true 
-  prismaJsonNullability = true 
+  output                = "./zod"
+  relationModel         = true
+  modelCase             = "camelCase"
+  modelSuffix           = "Schema"
+  useDecimalJs          = true
+  prismaJsonNullability = true
 }
 
 datasource db {
@@ -38,30 +38,30 @@ model Organization {
 }
 
 model Project {
-  id             String    @id @default(cuid())
+  id             String        @id @default(cuid())
   name           String
   organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   users          UserProject[]
   sops           SOP[]
   regulation     String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  role          Role      @default(USER)
-  accounts      Account[]
-  sessions      Session[]
-  organizations Organization[] @relation("OrganizationUsers")
+  id                 String         @id @default(cuid())
+  name               String?
+  email              String?        @unique
+  emailVerified      DateTime?
+  image              String?
+  role               Role           @default(USER)
+  accounts           Account[]
+  sessions           Session[]
+  organizations      Organization[] @relation("OrganizationUsers")
   adminOrganizations Organization[] @relation("OrganizationAdmin")
-  userProjects  UserProject[]
-  sops          SOP[]     @relation("CreatedSOPs")
+  userProjects       UserProject[]
+  sops               SOP[]          @relation("CreatedSOPs")
 }
 
 model UserProject {
@@ -75,32 +75,33 @@ model UserProject {
 }
 
 model SOP {
-  id           String   @id @default(cuid())
-  name         String
-  content      String
-  AiScore      Float?
-  aiContent    String?
-  projectId    String
-  project      Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  createdById  String
-  createdBy    User     @relation(fields: [createdById], references: [id], onDelete: Cascade, name: "CreatedSOPs")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id            String   @id @default(cuid())
+  name          String
+  content       String
+  AiScore       Float?
+  aiContent     String?
+  projectId     String
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdById   String
+  createdBy     User     @relation(fields: [createdById], references: [id], onDelete: Cascade, name: "CreatedSOPs")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  approvedCount Int?     @default(1)
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

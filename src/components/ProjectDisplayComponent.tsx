@@ -117,6 +117,7 @@ const ProjectDisplayComponent = ({
             userName={userName}
           />
         )}
+        <GraphProjectView allSOPs={sops!} />
       </div>
 
       {isError ? (
@@ -135,7 +136,10 @@ const ProjectDisplayComponent = ({
           </div>
         </div>
       ) : filteredSOPs && filteredSOPs.length > 0 ? (
-        filteredSOPs.map((sop: any) => (<ContentDisplayCard key={sop.id} data={sop} />))
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+          {filteredSOPs.map((sop: any) => (
+            <ContentDisplayCard key={sop.id} data={sop} />))}
+        </div>
       ) : searchStarted ? (
         <div className="flex flex-col gap-8 w-full items-center mt-24">
           <Image
@@ -166,6 +170,7 @@ import { Input } from "./ui/input";
 import SOPUploadDialog from "./SOPUploadDialog";
 import ProjectRegulationsTextDialog from "./ProjectRegulationsTextDialog";
 import ContentDisplayCard from "./DisplayCard";
+import { GraphProjectView } from "./GraphProjectView";
 
 const LoadingSkeleton = () => (
   <>
