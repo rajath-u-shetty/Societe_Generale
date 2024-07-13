@@ -86,7 +86,8 @@ model SOP {
   createdBy     User     @relation(fields: [createdById], references: [id], onDelete: Cascade, name: "CreatedSOPs")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  approvedCount Int?     @default(1)
+  approved      Boolean  @default(false) @db.Boolean
+  description   String?
 }
 
 model Account {

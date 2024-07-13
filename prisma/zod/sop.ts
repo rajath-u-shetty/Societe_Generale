@@ -11,7 +11,8 @@ export const sOPSchema = z.object({
   createdById: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
-  approvedCount: z.number().int().nullish(),
+  approved: z.boolean(),
+  description: z.string().nullish(),
 })
 
 export interface CompleteSOP extends z.infer<typeof sOPSchema> {

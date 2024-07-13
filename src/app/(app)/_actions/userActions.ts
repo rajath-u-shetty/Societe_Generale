@@ -136,3 +136,39 @@ export const getProjectRegulationsText = async (projectId: string) => {
   });
   return { error: null, data };
 }
+
+export const actionApproveSOP = async (sopId: string) => {
+  const session = await getServerSession(authOptions);
+  if (!session) return { error: "Unauthorized", data: null };
+
+  if (!sopId) return { error: "Missing sopId", data: null };
+
+  const data = await db!.sOP.update({
+    where: {
+      id: sopId,
+    },
+    data: {
+      approved: true,
+    },
+  });
+
+  return { error: null, data };
+}
+
+export const actionRejectSOP = async (sopId: string) => {
+  const session = await getServerSession(authOptions);
+  if (!session) return { error: "Unauthorized", data: null };
+
+  if (!sopId) return { error: "Missing sopId", data: null };
+
+  const data = await db!.sOP.update({
+    where: {
+      id: sopId,
+    },
+    data: {
+      approved: false,
+    },
+  });
+
+  return { error: null, data };
+}

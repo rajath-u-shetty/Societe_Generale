@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify({ error: "No SOP Text" }), { status: 400 });
   }
 
-  const { givenSopItems, enhancedSopItems, scoreOfEnteredSOPItems }: SOPType = body.sopText;
+  const { givenSopItems, enhancedSopItems, scoreOfEnteredSOPItems, description }: SOPType = body.sopText;
   const name = body.name;
 
   console.log(body)
@@ -41,6 +41,7 @@ export async function POST(req: Request) {
       content: JSON.stringify(givenSopItems),
       aiContent: JSON.stringify(enhancedSopItems),
       AiScore: Number(scoreOfEnteredSOPItems),
+      description: description,
     },
   });
 

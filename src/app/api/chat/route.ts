@@ -48,12 +48,14 @@ Please provide your response in the following JSON format:
     { "name": "string", "id": number }
   ],
   "scoreOfEnteredSOPItems": number
+  "description": "string"
 }
 
 Instructions:
 - givenSopItems: Include the original SOP items as provided.
 - enhancedSopItems: Provide improved versions of the SOP items that better align with the regulations. Maintain the original structure but modify the content as needed.
 - scoreOfEnteredSOPItems: Assign a score from 0 to 100 indicating how well the original SOP items comply with the regulations.
+- description: Provide how givenSopItems and enhancedSopItems are different from each other. Provide a brief description of the changes made.
 - Return the name as it is.
 
 Ensure your response is a valid JSON object wrapped in a code block.`,
