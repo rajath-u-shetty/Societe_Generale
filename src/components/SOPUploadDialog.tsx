@@ -1,5 +1,4 @@
 import React from 'react'
-import SortableDemo from './SortableDemo'
 import {
   Dialog,
   DialogContent,
@@ -9,6 +8,7 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from './ui/button';
 import { Plus } from 'lucide-react';
+import SortableDemo from './SortableDemo';
 
 type Props = {
   organizationId: string;

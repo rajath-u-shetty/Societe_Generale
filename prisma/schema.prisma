@@ -44,6 +44,7 @@ model Project {
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   users          UserProject[]
   sops           SOP[]
+  regulation     String?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 }
@@ -78,6 +79,7 @@ model SOP {
   title        String
   content      String
   aiContent    String?
+  description  String
   projectId    String
   project      Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   createdById  String

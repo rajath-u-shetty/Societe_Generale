@@ -109,3 +109,18 @@ export const actionFetchProjectSOPs = async (projectId: string) => {
   });
   return { error: null, data };
 }
+
+export const setProjectRegulationsText = async (projectId: string, regulationsText: string) => {
+  const session = await getServerSession(authOptions);
+  if (!session) return { error: "Unauthorized", data: null };
+  if (!projectId) return { error: "Missing projectId", data: null };
+  const data = await db!.project.update({
+    where: {
+      id: projectId,
+    },
+    data: {
+      regulation: regulationsText,
+    },
+  });
+  return { error: null, data };
+}

@@ -5,6 +5,7 @@ export const projectSchema = z.object({
   id: z.string(),
   name: z.string(),
   organizationId: z.string(),
+  regulation: z.string().nullish(),
   createdAt: z.date(),
   updatedAt: z.date(),
 })

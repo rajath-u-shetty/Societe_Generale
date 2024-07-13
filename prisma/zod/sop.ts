@@ -6,6 +6,7 @@ export const sOPSchema = z.object({
   title: z.string(),
   content: z.string(),
   aiContent: z.string().nullish(),
+  description: z.string(),
   projectId: z.string(),
   createdById: z.string(),
   createdAt: z.date(),

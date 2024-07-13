@@ -1,174 +1,105 @@
-"use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { DragHandleDots2Icon, TrashIcon } from "@radix-ui/react-icons";
-import { useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
+"use client"
 
-import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+
 import {
-  Sortable,
-  SortableDragHandle,
-  SortableItem,
-} from "@/components/ui/sortable";
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 
-const schema = z.object({
-  flipTricks: z.array(
-    z.object({
-      name: z.string(),
-    })
-  ),
-  description: z.string().optional(),
-});
+import {
+  restrictToVerticalAxis,
+  restrictToParentElement,
+} from '@dnd-kit/modifiers';
+import { useState } from 'react';
+import SortableLinks from '@/components/SortableLinks';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { AddNewItem } from '@/components/AddNewItem';
 
-type Schema = z.infer<typeof schema>;
-
-function SortableDemo() {
-  const form = useForm<Schema>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      flipTricks: [
-        {
-          name: "Kickflip",
-        },
-        {
-          name: "Heelflip",
-        },
-      ],
-      description: "",
-    },
-  });
-
-  function onSubmit(input: Schema) {
-    console.log({ input });
-    console.log(input.description);
-    console.log(input.flipTricks[0].name);
-
-
-  }
-
-  const { fields, append, move, remove } = useFieldArray({
-    control: form.control,
-    name: "flipTricks",
-  });
-
-  return (
-    <Card>
-      <div className="flex flex-col items-center gap-4 sm:flex-row">
-        <CardHeader className="w-full flex-col gap-4 space-y-0 sm:flex-row">
-          <div className="flex flex-1 flex-col gap-1.5">
-            <CardTitle>Vertical sorting</CardTitle>
-            <CardDescription>
-              Sort items in the vertical direction.
-            </CardDescription>
-          </div>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="w-fit"
-            onClick={() => append({ name: "", })}
-          >
-            Add trick
-          </Button>
-        </CardHeader>
-      </div>
-      <CardContent>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex w-full flex-col gap-4"
-          >
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      className="h-8"
-                      {...field}
-                      placeholder="Description"
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <Sortable
-              value={fields}
-              onMove={({ activeIndex, overIndex }) =>
-                move(activeIndex, overIndex)
-              }
-              overlay={
-                <div className="grid grid-cols-[1fr,auto,auto] items-center gap-2">
-                  <div className="h-8 w-full rounded-sm bg-primary/10" />
-                  <div className="h-8 w-full rounded-sm bg-primary/10" />
-                  <div className="size-8 shrink-0 rounded-sm bg-primary/10" />
-                  <div className="size-8 shrink-0 rounded-sm bg-primary/10" />
-                </div>
-              }
-            >
-              <div className="flex w-full flex-col gap-2">
-                {fields.map((field, index) => (
-                  <SortableItem key={field.id} value={field.id} asChild>
-                    <div className="grid grid-cols-[1fr,auto,auto] items-center gap-2">
-                      <FormField
-                        control={form.control}
-                        name={`flipTricks.${index}.name`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <Input className="h-8" {...field} />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <SortableDragHandle
-                        variant="outline"
-                        size="icon"
-                        className="size-8 shrink-0"
-                      >
-                        <DragHandleDots2Icon
-                          className="size-4"
-                          aria-hidden="true"
-                        />
-                      </SortableDragHandle>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="icon"
-                        className="size-8 shrink-0"
-                        onClick={() => remove(index)}
-                      >
-                        <TrashIcon
-                          className="size-4 text-destructive"
-                          aria-hidden="true"
-                        />
-                        <span className="sr-only">Remove</span>
-                      </Button>
-                    </div>
-                  </SortableItem>
-                ))}
-              </div>
-            </Sortable>
-            <Button size="sm" className="w-fit">
-              Submit
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
-  );
+// Define the item interface
+interface Item {
+  name: string;
+  id: number;
 }
 
-export default SortableDemo;
+interface HomeProps {
+  // You can add any additional props if needed
+}
 
+const SortableDemo: React.FC<HomeProps> = () => {
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const [items, setItems] = useState<Item[]>([
+    { name: 'NextJS', id: 1693653637084 },
+    { name: 'ReactJS', id: 1693653637086 },
+    { name: 'Astro', id: 1693653637088 },
+    { name: 'Vue', id: 1693653637090 },
+  ]);
+
+  function handleDragEnd(event: any) {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      setItems((prevItems) => {
+        const oldIndex = prevItems.findIndex((item) => item.id === active.id);
+        const newIndex = prevItems.findIndex((item) => item.id === over.id);
+
+        return arrayMove(prevItems, oldIndex, newIndex);
+      });
+    }
+  }
+
+  function handleDelete(idToDelete: number) {
+    setItems((prevItems) => prevItems.filter((item) => item.id !== idToDelete));
+  }
+
+  let idx = Date.now();
+
+  function addNewItem(newItem: string) {
+    setItems((prevItems) => [...prevItems, { name: newItem, id: idx }]);
+  }
+
+  return (
+    <main className='flex justify-center items-center h-screen px-2 mx-auto select-none'>
+      <Card className='w-full md:max-w-lg'>
+        <CardHeader className='space-y-1 '>
+          <CardTitle className='text-2xl flex justify-between'>
+            Frameworks
+            <AddNewItem addNewItem={addNewItem} />
+          </CardTitle>
+          <CardDescription>List Popular web development frameworks</CardDescription>
+        </CardHeader>
+        <CardContent className='grid gap-4'>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+            modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+          >
+            <SortableContext items={items} strategy={verticalListSortingStrategy}>
+              {items.map((item) => (
+                <SortableLinks key={item.id} id={item} onDelete={handleDelete} />
+              ))}
+            </SortableContext>
+          </DndContext>
+        </CardContent>
+      </Card>
+    </main>
+  );
+};
+
+export default SortableDemo;

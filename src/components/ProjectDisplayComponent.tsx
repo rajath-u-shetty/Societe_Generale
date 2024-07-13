@@ -129,6 +129,7 @@ const ProjectDisplayComponent = ({
             );
           }}
         />
+        <ProjectRegulationsTextDialog projectId={projectId} organizationId={organizationId} />
         {userAccess !== "USER" && (
           <SOPUploadDialog
             projectId={projectId}
@@ -183,6 +184,7 @@ import { actionFetchProjectSOPs } from "@/app/(app)/_actions/userActions";
 import { Project, Role, User } from "@prisma/client";
 import { Input } from "./ui/input";
 import SOPUploadDialog from "./SOPUploadDialog";
+import ProjectRegulationsTextDialog from "./ProjectRegulationsTextDialog";
 
 const LoadingSkeleton = () => (
   <>
