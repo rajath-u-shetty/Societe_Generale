@@ -8,11 +8,15 @@ export const createOrg = async (req: Request) => {
   const { name } = await req.json();
   const org = await db!.organization.create({
     data: {
-      name,
-
+      name: name!,
+      admin: {
+        connect: {
+          id: session!.user.id,
+        },
       },
+    }
   })
-  
+
   return new Response(JSON.stringify(org), {
     status: 200,
     headers: {

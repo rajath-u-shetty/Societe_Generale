@@ -39,7 +39,7 @@ var formSchema: any;
 export default function JoinOrganizationDialog({ organization, userId, userAccess }: Props) {
   const router = useRouter();
 
-  if (userAccess !== "ADMIN") {
+  if (userAccess === "ADMIN") {
     formSchema = z.object({
       password: z.string().min(6, { message: "Password must be at least 6 numbers." }).max(6, { message: "Password must be at most 6 numbers." }).optional(),
     }).or(z.object({

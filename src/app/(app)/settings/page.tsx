@@ -17,7 +17,6 @@ export default function Page() {
           </p>
         </div>
         <Button
-          asChild
           variant={"ghost"}
           className="w-fit h-fit"
           onClick={() => setTheme("light")}
@@ -45,7 +44,6 @@ export default function Page() {
           </div>
         </Button>
         <Button
-          asChild
           variant={"ghost"}
           onClick={() => setTheme("dark")}
           className="w-fit h-fit"
@@ -73,7 +71,6 @@ export default function Page() {
           </div>
         </Button>
         <Button
-          asChild
           variant={"ghost"}
           onClick={() => setTheme("system")}
           className="w-fit h-fit"
