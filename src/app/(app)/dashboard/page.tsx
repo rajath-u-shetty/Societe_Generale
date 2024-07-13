@@ -14,7 +14,7 @@ const StudentDashboard = async () => {
         <h1 className="md:text-3xl text-xl font-semibold">
           Welcome {session?.user?.name},
         </h1>
-        {session?.user.access !== "ADMIN" && <CreateOrganizationDialog />}
+        {session?.user.access !== "USER" && <CreateOrganizationDialog />}
       </div>
       <Separator className="mt-3" />
       <div>

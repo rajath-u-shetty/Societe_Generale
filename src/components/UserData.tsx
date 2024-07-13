@@ -5,6 +5,7 @@ import { fetchAllOrganizations, getUserData } from "@/app/(app)/_actions/userAct
 import Image from "next/image";
 import JoinOrganizationForm from "./JoinOrganizationForm";
 import { ExtendedOrganization, ExtendedUserData } from "@/lib/ExtendedTypes";
+import MyOrganizations from "./MyOrganizations";
 
 const fetchUserData = async (): Promise<any> => {
   const response = await getUserData();
@@ -57,7 +58,7 @@ const UserData = () => {
     return <JoinOrganizationForm organizations={organizations} userData={userData!} />;
   }
 
-  return <pre>{JSON.stringify(userData, null, 2)}</pre>;
+  return <MyOrganizations organizations={userData?.organizations} userData={userData!} allOrganizations={organizations} />
 }
 
 export default UserData;
@@ -139,7 +140,7 @@ const LoadingSkeleton = () => {
   );
 };
 
-const LoadingState = () => (
+export const LoadingState = () => (
   <div className="w-full h-full">
     <LoadingSkeleton />
   </div>

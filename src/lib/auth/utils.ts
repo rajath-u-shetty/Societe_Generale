@@ -16,6 +16,7 @@ declare module "next-auth" {
   }
   interface User {
     role: Role;
+    image: string;
   }
 }
 
@@ -26,6 +27,7 @@ export type AuthSession = {
       name?: string;
       email?: string;
       access: Role;
+      image: string;
     };
   } | null;
 };
@@ -37,6 +39,7 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = user.id;
         session.user.access = user.role;
+        session.user.image = user.image;
       }
       return session;
     },
