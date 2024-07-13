@@ -15,10 +15,9 @@ import { Separator } from "./ui/separator";
 import { Input } from "./ui/input";
 import Image from "next/image";
 import { ExtendedOrganization, ExtendedUserData } from "@/lib/ExtendedTypes";
-import { UserProject } from "@prisma/client";
 import { LoadingState } from "./UserData";
 import JoinOrganizationDialog from "./JoinOrganizationDialog";
-import LeaveOrganizationDialog from "./LeaveOrganization";
+import LeaveOrganizationDialog from "./LeaveOrganizationDialog";
 
 type Props = {
   organizations: ExtendedOrganization[]
@@ -69,7 +68,7 @@ function MyClassroom({ organizations, userData, allOrganizations }: Props) {
                 </TableHead>
                 <TableHead className="text-center">Created By</TableHead>
                 <TableHead className="text-center">Members</TableHead>
-                <TableHead className="text-center">Subjects</TableHead>
+                <TableHead className="text-center">Projects</TableHead>
                 <TableHead className="text-center">View</TableHead>
                 <TableHead className="text-center">Action</TableHead>
               </TableRow>
@@ -81,10 +80,10 @@ function MyClassroom({ organizations, userData, allOrganizations }: Props) {
                     {organization.name}
                   </TableCell>
                   <TableCell className="text-center">
-                    {organization.admin?.name ? organization.admin.name : "No admin"}
+                    {organization.admin?.name}
                   </TableCell>
                   <TableCell className="text-center">
-                    {organization.createdAt.toDateString()}
+                    {organization.users.length}
                   </TableCell>
                   <TableCell className="text-center">
                     {organization.projects.length}
@@ -112,7 +111,7 @@ function MyClassroom({ organizations, userData, allOrganizations }: Props) {
                       //    classroomId={organization.id}
                       //  />
                       userData.role !== "USER" ? (
-                        <p>Delete organization</p> 
+                        <p>Delete organization</p>
                       ) : (
                         <LeaveOrganizationDialog
                           organizationId={organization.id}

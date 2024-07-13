@@ -1,3 +1,7 @@
+import OrganizationPageDisplay from '@/components/OrganizationPageDisplay'
+import { authOptions } from '@/lib/auth/utils'
+import { getServerSession } from 'next-auth'
+import { redirect } from 'next/navigation'
 import React from 'react'
 
 type Props = {
@@ -6,21 +10,18 @@ type Props = {
   }
 }
 
-async function OrganizationPage({params : {id}}: Props) {
-  const organizationId = id
-  const organization = await db!.organization.findFirst({
-    where: {
-      id: organizationId,
-    },
-    include: {
-      projects: true,
-      users: true,
-      admin: true,
-    },
-  })
+const OrganizationIdPage = async ({ params: { id } }: Props) => {
+  const session = await getServerSession(authOptions)
+  if (!session?.user) {
+    redirect("/sign-in")
+  }
+
   return (
-    <pre>{JSON.stringify(organization, null, 2)}</pre>
+    <div className='dark:text-white pt-24'>
+      {/* @ts-ignore */}
+      <OrganizationPageDisplay organizationId={id} user={session?.user} />
+    </div>
   )
 }
 
-export default OrganizationPage
+export default OrganizationIdPage

@@ -42,3 +42,17 @@ export const fetchAllOrganizations = async () => {
   });
   return data;
 };
+
+export const actionFetchOrganizationData = async (organizationId: string) => {
+  const data = await db!.organization.findUnique({
+    where: {
+      id: organizationId,
+    },
+    include: {
+      projects: true,
+      users: true,
+      admin: true,
+    },
+  });
+  return data;
+};

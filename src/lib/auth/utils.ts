@@ -34,6 +34,9 @@ export type AuthSession = {
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db) as Adapter,
+  pages: {
+    signIn: "/sign-in",
+  },
   callbacks: {
     session: ({ session, user }) => {
       if (session.user) {
@@ -42,6 +45,9 @@ export const authOptions: NextAuthOptions = {
         session.user.image = user.image;
       }
       return session;
+    },
+    redirect() {
+      return '/dashboard'
     },
   },
   providers: [
@@ -59,5 +65,5 @@ export const getUserAuth = async () => {
 
 export const checkAuth = async () => {
   const { session } = await getUserAuth();
-  if (!session) redirect("/api/auth/signin");
+  if (!session) redirect("/sign-in");
 };

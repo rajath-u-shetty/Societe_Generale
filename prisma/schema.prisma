@@ -34,6 +34,7 @@ model Organization {
   admin     User      @relation("OrganizationAdmin", fields: [adminId], references: [id], onDelete: Cascade)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  password  String?
 }
 
 model Project {

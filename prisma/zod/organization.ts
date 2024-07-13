@@ -7,6 +7,7 @@ export const organizationSchema = z.object({
   adminId: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
+  password: z.string().nullish(),
 })
 
 export interface CompleteOrganization extends z.infer<typeof organizationSchema> {
