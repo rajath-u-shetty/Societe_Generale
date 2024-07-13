@@ -17,7 +17,7 @@ const OrganizationIdPage = async ({ params: { id } }: Props) => {
   }
 
   return (
-    <div className='dark:text-white'>
+    <div className='dark:text-white pt-10'>
       {/* @ts-ignore */}
       <OrganizationPageDisplay organizationId={id} user={session?.user} />
     </div>

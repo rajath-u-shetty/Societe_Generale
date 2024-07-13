@@ -17,6 +17,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Skeleton, SVGSkeleton } from "@/components/ui/skeleton";
+import { Role, SOP, User } from "@prisma/client";
+import { actionFetchOrganizationData } from "@/app/(app)/_actions/userActions";
+import CreateProjectDialog from "./CreateProjectDialog";
 
 type Props = {
   organizationId: string;
@@ -26,19 +30,29 @@ type Props = {
     access: Role;
   }
 }
+
+type ExtendedOrganization = {
+  id: string;
+  name: string;
+  projects: ExtendedProject[];
+  users: User[];
+  admin: User;
+}
+
 type ExtendedProject = {
   id: string;
   name: string;
   organizationId: string;
   createdAt: Date;
   updatedAt: Date;
+  sops: SOP[];
 }
 
 const OrganizationPageDisplay = ({ organizationId, user }: Props) => {
   const router = useRouter();
   const [organizationData, setOrganizationData] = useState<ExtendedOrganization | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [filteredOrganizations, setFilteredOrganizations] = useState<ExtendedProject[] | []>([]);
+  const [filteredProjects, setFilteredProjects] = useState<ExtendedProject[] | []>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -74,9 +88,11 @@ const OrganizationPageDisplay = ({ organizationId, user }: Props) => {
       const filtered = organizationData.projects.filter((project) =>
         project.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      setFilteredOrganizations(filtered);
+      setFilteredProjects(filtered);
     }
   }, [organizationData, searchQuery]);
+
+  console.log("filteredProjects", filteredProjects);
 
   if (isLoading || !organizationData) return <LoadingState />;
 
@@ -95,7 +111,7 @@ const OrganizationPageDisplay = ({ organizationId, user }: Props) => {
           </BreadcrumbList>
         </Breadcrumb>
         <div className="flex items-center gap-2">
-          {user.access !== "USER" && (
+          {user.id === organizationData.admin.id && (
             <CreateProjectDialog organizationId={organizationId} />
           )}
           {user.id === organizationData.admin.id ? (
@@ -130,7 +146,7 @@ const OrganizationPageDisplay = ({ organizationId, user }: Props) => {
 
       <div className="grid md:grid-cols-3 grid-cols-1 gap-6 mt-6 pb-14">
         {organizationData.projects.length > 0 &&
-          filteredOrganizations.map((project) => (
+          filteredProjects.map((project) => (
             <Link
               href={`/organization/${organizationId}/${project.id}`}
               className="cursor-pointer border-white border rounded-xl"
@@ -139,7 +155,7 @@ const OrganizationPageDisplay = ({ organizationId, user }: Props) => {
               <Card className="flex flex-col items-start justify-start p-8 rounded-xl dark:bg-[rgb(17,17,17)]/100">
                 <h1 className="text-xl font-bold">{project.name}</h1>
                 <h1 className="text-base">
-                  Number of SOP&apos;s: TODO : Add number of SOP&apos;s
+                  Number of SOP&apos;s: {project.sops.length}
                 </h1>
               </Card>
             </Link>
@@ -150,11 +166,6 @@ const OrganizationPageDisplay = ({ organizationId, user }: Props) => {
 };
 
 export default OrganizationPageDisplay;
-import { Skeleton, SVGSkeleton } from "@/components/ui/skeleton";
-import { ExtendedOrganization } from "@/lib/ExtendedTypes";
-import { Role, User, UserProject } from "@prisma/client";
-import { actionFetchOrganizationData } from "@/app/(app)/_actions/userActions";
-import CreateProjectDialog from "./CreateProjectDialog";
 
 const LoadingSkeleton = () => (
   <>

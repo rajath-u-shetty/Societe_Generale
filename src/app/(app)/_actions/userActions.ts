@@ -57,18 +57,55 @@ export const actionFetchOrganizationData = async (organizationId: string) => {
         },
       },
     },
-  });
-
-  if (!isUserPartOfOrganization) return { error: "User is not part of this organization" };
-  const data : ExtendedOrganization | null = await db!.organization.findUnique({
-    where: {
-      id: organizationId,
-    },
     include: {
       projects: true,
       users: true,
       admin: true,
     },
   });
+
+  if (!isUserPartOfOrganization) return { error: "User is not part of this organization" };
+  const data = await db!.organization.findUnique({
+    where: {
+      id: organizationId,
+    },
+    include: {
+      projects: {
+        include: {
+          sops: true,
+          _count: {
+            select: {
+              sops: true,
+            },
+          },
+          organization: true,
+          users: true,
+        },
+      },
+      users: true,
+      admin: true,
+    },
+  });
   return { error: null, data };
 };
+
+export const actionFetchProjectSOPs = async (projectId: string) => {
+  const session = await getServerSession(authOptions);
+  if (!session) return { error: "Unauthorized", data: null };
+  if (!projectId) return { error: "Missing projectId", data: null };
+  const data = await db!.project.findUnique({
+    where: {
+      id: projectId,
+    },
+    include: {
+      sops: {
+        include: {
+          project: true,
+          createdBy: true,
+        },
+      },
+      users: true,
+    },
+  });
+  return { error: null, data };
+}
