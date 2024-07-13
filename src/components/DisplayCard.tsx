@@ -8,19 +8,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from './ui/button';
-import ReactDiffViewer from 'react-diff-viewer';
+import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer';
 
 const ContentDisplayCard = ({ data }: { data: any }) => {
   const content = JSON.parse(data.content);
   const aiContent = JSON.parse(data.aiContent);
   const [isOpen, setIsOpen] = useState(true);
 
-  const contentArray = content.map((item: any) => item.name);
-  const contentArrayAsString = contentArray.join(', ');
-
-  const aiContentArray = aiContent.map((item: any) => item.name);
-  const aiContentArrayAsString = aiContentArray.join(', ');
-
+  // Convert array to string with each element on a new line
+  const contentString = content.map((item: any) => item.name).join('\n');
+  const aiContentString = aiContent.map((item: any) => item.name).join('\n');
 
   return (
     <Dialog>
@@ -44,11 +41,11 @@ const ContentDisplayCard = ({ data }: { data: any }) => {
                   Score: {data.AiScore}
                 </Badge>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-4">
                 <Button
                   onClick={() => setIsOpen(prev => !prev)}
-                  variant="secondary"
-                  className="text-sm"
+                  variant="default"
+                  className="text-sm w-28"
                 >
                   {isOpen ? 'Diff View' : 'Original View'}
                 </Button>
@@ -78,10 +75,10 @@ const ContentDisplayCard = ({ data }: { data: any }) => {
               </div>
             ) : (
               <ReactDiffViewer
-                oldValue={contentArrayAsString}
-                newValue={aiContentArrayAsString}
-                disableWordDiff={true}
+                oldValue={contentString}
+                newValue={aiContentString}
                 useDarkTheme={true}
+                compareMethod={DiffMethod.WORDS}
               />
             )}
           </CardContent>
