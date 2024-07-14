@@ -22,8 +22,11 @@ type Props = {
 
 const SOPUploadDialog = ({ projectId, organizationId }: Props) => {
   const SopItems = useSOPStore((state) => state.SOPItems);
+  const setSOPItems = useSOPStore((state) => state.setSOPItems);
   const regulationsText = useSOPStore((state) => state.regulationsText);
+  const setRegulationsText = useSOPStore((state) => state.setRegulationsText);
   const name = useSOPStore((state) => state.SOPName);
+  const setName = useSOPStore((state) => state.setSOPName);
   const [isOpen, setIsOpen] = React.useState(false);
 
   const { mutate: mutateSOP, isPending } = useMutation({
@@ -35,9 +38,14 @@ const SOPUploadDialog = ({ projectId, organizationId }: Props) => {
     },
     onSuccess: async (data) => {
       await axios.post("/api/project/sop", { projectId, organizationId, sopText: data, name })
+      setSOPItems([])
+      setRegulationsText('')
+      setName('')
       setIsOpen(false)
     },
   })
+
+  const isPublishDisabled = regulationsText.length === 0 || SopItems.length === 0 || name.length === 0
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -54,7 +62,7 @@ const SOPUploadDialog = ({ projectId, organizationId }: Props) => {
           <DialogTitle className="leading-relaxed">Add Items and arrange them in the order you want to create a SOP</DialogTitle>
         </DialogHeader>
         <SortableDemo />
-        <Button isLoading={isPending} className="w-[130px]" onClick={() => mutateSOP()}>Publish</Button>
+        <Button isLoading={isPending} disabled={isPublishDisabled} className="w-[130px]" onClick={() => mutateSOP()}>Publish</Button>
       </DialogContent>
     </Dialog>
   )

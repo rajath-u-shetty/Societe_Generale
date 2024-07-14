@@ -55,7 +55,7 @@ model User {
   email              String?        @unique
   emailVerified      DateTime?
   image              String?
-  role               Role           @default(USER)
+  role               Role           @default(ADMIN)
   accounts           Account[]
   sessions           Session[]
   organizations      Organization[] @relation("OrganizationUsers")
