@@ -69,7 +69,7 @@ export function GraphProjectView({ allSOPs }: { allSOPs: SOP[] }) {
             <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
               <CardTitle>Interactive Graph</CardTitle> 
               <CardDescription>
-                Showing average AI Score for all SOPs in the project
+                Showing average Score for all SOPs in the project based on the regulations.
               </CardDescription>
             </div>
             <div className="flex">

@@ -101,24 +101,22 @@ export default function JoinOrganizationDialog({ organization, userId, userAcces
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            {userAccess !== "ADMIN" && (
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input type="password" placeholder="Ex: 123456" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      You must enter the organization password to join.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="Ex: 123456" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    You must enter the organization password to join.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <Button type="submit" className="w-full" isLoading={form.formState.isSubmitting}>Join</Button>
           </form>
         </Form>
