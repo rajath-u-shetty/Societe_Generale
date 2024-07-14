@@ -3,6 +3,7 @@
  * @see https://v0.dev/t/1iORZIaujx6
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
+import Image from "next/image"
 import Link from "next/link"
 
 export default function HomePage() {
@@ -32,12 +33,12 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-          <img
-            src="/placeholder.svg"
+          <Image
+            src="/hero.png"
             width="1270"
-            height="550"
+            height="1250"
             alt="Hero"
-            className="mx-auto aspect-[2.3/1] overflow-hidden rounded-t-xl object-cover"
+            className="mx-auto overflow-hidden rounded-t-xl object-cover"
           />
         </div>
       </section>
