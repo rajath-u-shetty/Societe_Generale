@@ -1,4 +1,5 @@
 import { authOptions } from "@/lib/auth/utils";
+import { db } from "@/lib/db";
 import { AiResponse } from "@/lib/types";
 import { getServerSession } from "next-auth";
 

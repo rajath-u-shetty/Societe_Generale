@@ -1,15 +1,19 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client'
+import "server-only"
 
 declare global {
-  // allow global `var` declarations
-  // eslint-disable-next-line no-var
-  var db: PrismaClient | undefined;
+  // eslint-disable-next-line no-var, no-unused-vars
+  var cachedPrisma: PrismaClient
 }
 
-export const db =
-  global.db ||
-  new PrismaClient({
-    log: ["query"],
-  });
+let prisma: PrismaClient
+if (process.env.NODE_ENV === 'production') {
+  prisma = new PrismaClient()
+} else {
+  if (!global.cachedPrisma) {
+    global.cachedPrisma = new PrismaClient()
+  }
+  prisma = global.cachedPrisma
+}
 
-if (process.env.NODE_ENV !== "production") global.db = db;
+export const db = prisma

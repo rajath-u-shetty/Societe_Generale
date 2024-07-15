@@ -1,6 +1,7 @@
 "use server";
 
 import { authOptions } from "@/lib/auth/utils";
+import { db } from "@/lib/db";
 import { ExtendedOrganization } from "@/lib/ExtendedTypes";
 import { getServerSession } from "next-auth";
 
